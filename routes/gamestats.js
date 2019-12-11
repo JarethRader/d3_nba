@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const Scoreboard = require("../models/Scoreboard");
+const BoxScore = require("../models/BoxScore");
 const Game = require("../models/Game");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const axios = require("axios");
-const fs = require("file-system");
 
 const saveNewGame = require("../components/saveNewGame");
+const saveNewBoxScore = require("../components/saveNewBoxScore");
 
 //@route GET /gamestats/fetch
 router.get("/fetchToday", async (req, res) => {
@@ -19,42 +19,52 @@ router.get("/fetchToday", async (req, res) => {
     }
   };
 
-  let newGame_ids = [];
+  axios
+    .get(url, config)
+    .then(async data => {
+      let games = data.data["resultSets"][0]["rowSet"];
+      for (var i = 0; i < games.length; i++) {
+        _game_id = games[i][2];
 
-  axios.get(url, config).then(async data => {
-    let games = data.data["resultSets"][0]["rowSet"];
-    for (var i = 0; i < games.length; i++) {
-      game_id = games[i][2];
-      newGame_ids.push(game_id);
-    }
-    for (let j = 0; j < newGame_ids.length; j++) {
-      //   console.log(newGame_ids[j]);
-      try {
-        // await saveNewGame(newGame_ids[j])
-        //   .then(gameAdded => {
-        //     fs.writeFile("./log", gameAdded);
-        //   })
-        //   .catch(err => {
-        //     console.log(err);
-        //   });
-        let statUrl = `https://stats.nba.com/stats/boxscoresummaryv2?GameID=${newGame_ids[j]}`;
-        console.log(statUrl.data);
-        axios
-          .get(statUrl, config)
-          .then(stats => {
-            console.log("Stats: ");
-            console.log(stats);
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      } catch (err) {
-        console.log(err);
+        _game_id = parseInt(_game_id, 10);
+
+        console.log(_game_id);
+        try {
+          await saveNewGame(_game_id)
+            .then(async gameID => {
+              await saveNewBoxScore(gameID.game_id)
+                .then(boxScore => {
+                  console.log(boxScore);
+                  // res.status(200).json(boxScore);
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            })
+            .catch(async err => {
+              if (err === "Game already added") {
+                console.log("Can add new box score");
+                await saveNewGame(_game_id)
+                  .then(boxscore => {
+                    console.log(boxscore);
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  });
+              }
+              console.log(err);
+              // res.status(400).json({ err });
+            });
+        } catch (err) {
+          console.log(err);
+          res.status(400).json({ err });
+        }
       }
-    }
-
-    res.status(200).json({ success: true });
-  });
+      res.status(200).json({ success: true });
+    })
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 //@route GET /gamestats/game?game_id=${game_id}

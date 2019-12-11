@@ -1,0 +1,57 @@
+// console.log("Stats: ");
+            // console.log(stats.data);
+            //get Game Date
+
+            // let _gameID = stats.data["resultSets"][0]["rowSet"][0][2]
+            // let _gamedate = stats.data["resultSets"][0]["rowSet"][0][0];
+            // let _awayTeam =
+            //   stats.data["resultSets"][5]["rowSet"][0][5] +
+            //   " " +
+            //   stats.data["resultSets"][5]["rowSet"][0][6];
+            // let _homeTeam =
+            //   stats.data["resultSets"][5]["rowSet"][1][5] +
+            //   " " +
+            //   stats.data["resultSets"][5]["rowSet"][1][6];
+
+            // let _lastMeetingWinner =
+            //   stats.data["resultSets"][6]["rowSet"][0][7] >
+            //   stats.data["resultSets"][6]["rowSet"][0][12]
+            //     ? stats.data["resultSets"][6]["rowSet"][0][6]
+            //     : stats.data["resultSets"][6]["rowSet"][0][11];
+
+            // let _Q1AwayPts = stats.data["resultSets"][5]["rowSet"][0][8];
+            // let _Q2AwayPts = stats.data["resultSets"][5]["rowSet"][0][9];
+            // let _Q3AwayPts = stats.data["resultSets"][5]["rowSet"][0][10];
+            // let _Q4AwayPts = stats.data["resultSets"][5]["rowSet"][0][11];
+
+            // let _Q1HomePts = stats.data["resultSets"][5]["rowSet"][1][8];
+            // let _Q2HomePts = stats.data["resultSets"][5]["rowSet"][1][9];
+            // let _Q3HomePts = stats.data["resultSets"][5]["rowSet"][1][10];
+            // let _Q4HomePts = stats.data["resultSets"][5]["rowSet"][1][11];
+
+            // let _referee1 =
+            //   stats.data["resultSets"][2]["rowSet"][0][1] +
+            //   " " +
+            //   stats.data["resultSets"][2]["rowSet"][0][2];
+
+            // let _referee2 =
+            // stats.data["resultSets"][2]["rowSet"][1][1] +
+            // " " +
+            // stats.data["resultSets"][2]["rowSet"][1][2];
+
+            // let _referee3 =
+            // stats.data["resultSets"][2]["rowSet"][2][1] +
+            // " " +
+            // stats.data["resultSets"][2]["rowSet"][2][2];
+
+            // let _timesTied = stats.data["resultSets"][1]["rowSet"][0][9];
+
+            // let _leadChanges = stats.data["resultSets"][1]["rowSet"][0][8];
+
+            // console.log(stats.data["resultSets"][0]["rowSet"][0][2]);
+
+            // let _winner =
+            //   stats.data["resultSets"][5]["rowSet"][0][22] >
+            //   stats.data["resultSets"][5]["rowSet"][1][22]
+            //     ? stats.data["resultSets"][5]["rowSet"][0][4]
+            //     : stats.data["resultSets"][5]["rowSet"][1][4];

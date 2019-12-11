@@ -8,7 +8,7 @@ db.authenticate()
   .then(() => console.log("Database Connected..."))
   .catch(err => console.log("Error: " + err));
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 const app = express();
 
