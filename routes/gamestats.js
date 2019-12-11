@@ -26,13 +26,13 @@ router.get("/fetchToday", async (req, res) => {
       for (var i = 0; i < games.length; i++) {
         _game_id = games[i][2];
 
-        _game_id = parseInt(_game_id, 10);
+        // checkID = parseInt(_game_id, 10);
 
-        console.log(_game_id);
+        // console.log(checkID);
         try {
           await saveNewGame(_game_id)
-            .then(async gameID => {
-              await saveNewBoxScore(gameID.game_id)
+            .then(async game => {
+              await saveNewBoxScore(game.game_id)
                 .then(boxScore => {
                   console.log(boxScore);
                   // res.status(200).json(boxScore);

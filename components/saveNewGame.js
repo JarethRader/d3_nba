@@ -8,7 +8,7 @@ const saveNewGame = _game_id => {
   return new Promise((resolve, reject) => {
     Game.findOne({
       where: {
-        game_id: { [Op.like]: _game_id }
+        game_id: { [Op.like]: parseInt(_game_id, 10) }
       }
     })
       .then(async game => {

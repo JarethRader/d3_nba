@@ -22,10 +22,10 @@ const saveNewBoxScore = _gameID => {
     axios
       .get(statUrl, gameConfig)
       .then(stats => {
-        if (gameID === stats.data["resultSets"][0]["rowSet"][0][2]) {
+        if (_gameID === stats.data["resultSets"][0]["rowSet"][0][2]) {
           console.log("Making new box score");
 
-          let _gameID = stats.data["resultSets"][0]["rowSet"][0][2];
+          let _game_id = stats.data["resultSets"][0]["rowSet"][0][2];
           let _gamedate = stats.data["resultSets"][0]["rowSet"][0][0];
           let _awayTeam =
             stats.data["resultSets"][5]["rowSet"][0][5] +
@@ -69,7 +69,7 @@ const saveNewBoxScore = _gameID => {
               : stats.data["resultSets"][5]["rowSet"][1][4];
 
           let newBoxScoreSummary = new BoxScore({
-            game_id: _gameID,
+            game_id: _game_id,
             gameDate: _gamedate,
             awayTeam: _awayTeam,
             homeTeam: _homeTeam,
@@ -98,25 +98,25 @@ const saveNewBoxScore = _gameID => {
             .then(boxScoreSummary => {
               resolve({
                 boxScoreSummary: {
-                  game_id: boxScoreSummary.Game_id,
-                  gameDate: boxScoreSummary.GameDate,
-                  awayTeam: boxScoreSummary.AwayTeam,
-                  homeTeam: boxScoreSummary.HomeTeam,
-                  lastMeetingWinner: boxScoreSummary.LastMeetingWinner,
-                  q1AwayPts: boxScoreSummary.Q1AwayPts,
-                  q2AwayPts: boxScoreSummary.Q2AwayPts,
-                  q3AwayPts: boxScoreSummary.Q3AwayPts,
-                  q4AwayPts: boxScoreSummary.Q4AwayPts,
-                  q1HomePts: boxScoreSummary.Q1HomePts,
-                  q2HomePts: boxScoreSummary.Q2HomePts,
-                  q3HomePts: boxScoreSummary.Q3HomePts,
-                  q4HomePts: boxScoreSummary.Q4HomePts,
-                  referee1: boxScoreSummary.Referee1,
-                  referee2: boxScoreSummary.Referee2,
-                  referee3: boxScoreSummary.Referee3,
-                  timesTied: boxScoreSummary.TimesTied,
-                  leadChanges: boxScoreSummary.LeadChanges,
-                  winner: boxScoreSummary.Winner
+                  game_id: boxScoreSummary.game_id,
+                  gameDate: boxScoreSummary.gameDate,
+                  awayTeam: boxScoreSummary.awayTeam,
+                  homeTeam: boxScoreSummary.homeTeam,
+                  lastMeetingWinner: boxScoreSummary.lastMeetingWinner,
+                  q1AwayPts: boxScoreSummary.q1AwayPts,
+                  q2AwayPts: boxScoreSummary.q2AwayPts,
+                  q3AwayPts: boxScoreSummary.q3AwayPts,
+                  q4AwayPts: boxScoreSummary.q4AwayPts,
+                  q1HomePts: boxScoreSummary.q1HomePts,
+                  q2HomePts: boxScoreSummary.q2HomePts,
+                  q3HomePts: boxScoreSummary.q3HomePts,
+                  q4HomePts: boxScoreSummary.q4HomePts,
+                  referee1: boxScoreSummary.referee1,
+                  referee2: boxScoreSummary.referee2,
+                  referee3: boxScoreSummary.referee3,
+                  timesTied: boxScoreSummary.timesTied,
+                  leadChanges: boxScoreSummary.leadChanges,
+                  winner: boxScoreSummary.winner
                 }
               });
             })
