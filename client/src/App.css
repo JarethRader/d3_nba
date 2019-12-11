@@ -1,21 +1,18 @@
-.remove-btn {
-    margin-right: 0.5rem;
+.App {
+  margin: 0 auto;
+  text-align: center;
+  background-color: #282c34;
+  min-height: 100vh;
+  color: white;
 }
 
-.fade-enter {
-  opacity: 0.01;
+.App-header {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.fade-enter-active {
-    opacity: 1;
-    transition: opacity 1000ms ease-in;
-}
-
-.fade-exit {
-    opacity: 1;
-}
-
-.fade-exit-active {
-    opacity: 0.01;
-    transition: opacity 1000ms ease-in;
+.App-link {
+  color: #09d3ac;
 }

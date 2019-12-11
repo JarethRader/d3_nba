@@ -111,59 +111,65 @@ router.get("/game", (req, res) => {
 //@route GET /gamestats/getboxScore
 //@desc get box stats for specific game in the past
 //@access public
-router.get('boxScore', async (req, res) => {
-  if(!req.query.gameID){
-    return res.status(400).json({ err: "Invalid Game Date"})
+router.get("boxScore", async (req, res) => {
+  if (!req.query.gameID) {
+    return res.status(400).json({ err: "Invalid Game Date" });
   }
 
   Game.findOne({
     where: {
-      game_id: { [Op.like]: parseInt(req.query.gameID, 10)}
+      game_id: { [Op.like]: parseInt(req.query.gameID, 10) }
     }
-  }).then(async game => {
-    if(game !== null){
-      res.status(400).json({ err: "Game already added"})
-    } else {
-      await saveNewGame(req.query.gameID).then(game => {
-        await saveNewBoxScore(game.game_id).then(boxScoreSummary => {
-          if(boxScoreSummary !== null){
-            res.status(200).json({
-              boxScoreSummary: {
-                game_id: boxScoreSummary.game_id,
-                gameDate: boxScoreSummary.gameDate,
-                awayTeam: boxScoreSummary.awayTeam,
-                homeTeam: boxScoreSummary.homeTeam,
-                lastMeetingWinner: boxScoreSummary.lastMeetingWinner,
-                q1AwayPts: boxScoreSummary.q1AwayPts,
-                q2AwayPts: boxScoreSummary.q2AwayPts,
-                q3AwayPts: boxScoreSummary.q3AwayPts,
-                q4AwayPts: boxScoreSummary.q4AwayPts,
-                q1HomePts: boxScoreSummary.q1HomePts,
-                q2HomePts: boxScoreSummary.q2HomePts,
-                q3HomePts: boxScoreSummary.q3HomePts,
-                q4HomePts: boxScoreSummary.q4HomePts,
-                referee1: boxScoreSummary.referee1,
-                referee2: boxScoreSummary.referee2,
-                referee3: boxScoreSummary.referee3,
-                timesTied: boxScoreSummary.timesTied,
-                leadChanges: boxScoreSummary.leadChanges,
-                winner: boxScoreSummary.winner
-              }
-            });
-          }
-        }).catch(err => {
-          console.log(err);
-          res.status(400).json({ err })
-        })
-      }).catch(err => {
-        console.log(err);
-        res.status(400).json({ err })
-      })
-    }
-  }).catch(err => {
-    console.log(err);
-    res.status(400).json({ err })
   })
-})
+    .then(async game => {
+      if (game !== null) {
+        res.status(400).json({ err: "Game already added" });
+      } else {
+        await saveNewGame(req.query.gameID)
+          .then(async game => {
+            await saveNewBoxScore(game.game_id)
+              .then(boxScoreSummary => {
+                if (boxScoreSummary !== null) {
+                  res.status(200).json({
+                    boxScoreSummary: {
+                      game_id: boxScoreSummary.game_id,
+                      gameDate: boxScoreSummary.gameDate,
+                      awayTeam: boxScoreSummary.awayTeam,
+                      homeTeam: boxScoreSummary.homeTeam,
+                      lastMeetingWinner: boxScoreSummary.lastMeetingWinner,
+                      q1AwayPts: boxScoreSummary.q1AwayPts,
+                      q2AwayPts: boxScoreSummary.q2AwayPts,
+                      q3AwayPts: boxScoreSummary.q3AwayPts,
+                      q4AwayPts: boxScoreSummary.q4AwayPts,
+                      q1HomePts: boxScoreSummary.q1HomePts,
+                      q2HomePts: boxScoreSummary.q2HomePts,
+                      q3HomePts: boxScoreSummary.q3HomePts,
+                      q4HomePts: boxScoreSummary.q4HomePts,
+                      referee1: boxScoreSummary.referee1,
+                      referee2: boxScoreSummary.referee2,
+                      referee3: boxScoreSummary.referee3,
+                      timesTied: boxScoreSummary.timesTied,
+                      leadChanges: boxScoreSummary.leadChanges,
+                      winner: boxScoreSummary.winner
+                    }
+                  });
+                }
+              })
+              .catch(err => {
+                console.log(err);
+                res.status(400).json({ err });
+              });
+          })
+          .catch(err => {
+            console.log(err);
+            res.status(400).json({ err });
+          });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400).json({ err });
+    });
+});
 
 module.exports = router;
