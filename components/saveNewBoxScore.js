@@ -23,7 +23,7 @@ const saveNewBoxScore = _gameID => {
       .get(statUrl, gameConfig)
       .then(stats => {
         if (_gameID === stats.data["resultSets"][0]["rowSet"][0][2]) {
-          console.log("Making new box score");
+          // console.log("Making new box score");
 
           let _game_id = stats.data["resultSets"][0]["rowSet"][0][2];
           let _gamedate = stats.data["resultSets"][0]["rowSet"][0][0];
@@ -31,10 +31,12 @@ const saveNewBoxScore = _gameID => {
             stats.data["resultSets"][5]["rowSet"][0][5] +
             " " +
             stats.data["resultSets"][5]["rowSet"][0][6];
+          let _awayTeamAbr = stats.data["resultSets"][5]["rowSet"][0][4];
           let _homeTeam =
             stats.data["resultSets"][5]["rowSet"][1][5] +
             " " +
             stats.data["resultSets"][5]["rowSet"][1][6];
+          let _homeTeamAbr = stats.data["resultSets"][5]["rowSet"][1][4];
           let _lastMeetingWinner =
             stats.data["resultSets"][6]["rowSet"][0][7] >
             stats.data["resultSets"][6]["rowSet"][0][12]
@@ -72,7 +74,9 @@ const saveNewBoxScore = _gameID => {
             game_id: _game_id,
             gameDate: _gamedate,
             awayTeam: _awayTeam,
+            awayTeamAbr: _awayTeamAbr,
             homeTeam: _homeTeam,
+            homeTeamAbr: _homeTeamAbr,
             lastMeetingWinner: _lastMeetingWinner,
             q1AwayPts: _q1AwayPts,
             q2AwayPts: _q2AwayPts,
@@ -90,8 +94,8 @@ const saveNewBoxScore = _gameID => {
             winner: _winner
           });
 
-          console.log("New Box Score: ");
-          console.log(newBoxScoreSummary);
+          // console.log("New Box Score: ");
+          // console.log(newBoxScoreSummary);
 
           newBoxScoreSummary
             .save()
@@ -101,7 +105,9 @@ const saveNewBoxScore = _gameID => {
                   game_id: boxScoreSummary.game_id,
                   gameDate: boxScoreSummary.gameDate,
                   awayTeam: boxScoreSummary.awayTeam,
+                  awayTeamAbr: boxScoreSummary.awayTeamAbr,
                   homeTeam: boxScoreSummary.homeTeam,
+                  homeTeamAbr: boxScoreSummary.homeTeamAbr,
                   lastMeetingWinner: boxScoreSummary.lastMeetingWinner,
                   q1AwayPts: boxScoreSummary.q1AwayPts,
                   q2AwayPts: boxScoreSummary.q2AwayPts,

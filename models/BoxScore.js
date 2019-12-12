@@ -11,7 +11,13 @@ const BoxScore = db.define("boxscore", {
   awayTeam: {
     type: Sequelize.STRING
   },
+  awayTeamAbr: {
+    type: Sequelize.STRING
+  },
   homeTeam: {
+    type: Sequelize.STRING
+  },
+  homeTeamAbr: {
     type: Sequelize.STRING
   },
   lastMeetingWinner: {

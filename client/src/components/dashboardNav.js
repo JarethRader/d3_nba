@@ -4,7 +4,6 @@ import {
   ButtonDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem,
   Navbar,
   NavbarToggler,
   NavbarBrand,
@@ -17,6 +16,7 @@ import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 
 import { connect } from "react-redux";
+import { setGameDate } from "../actions/gameAction";
 
 class DashboardNav extends Component {
   constructor(props) {
@@ -47,7 +47,7 @@ class DashboardNav extends Component {
     console.log(today);
   }
 
-  handleDayClick(day, { selected }) {
+  async handleDayClick(day, { selected }) {
     console.log(day);
     let year = day.getYear().toString();
     let month = day.getMonth() + 1;
@@ -68,6 +68,7 @@ class DashboardNav extends Component {
       selectedDay: selected ? undefined : day,
       dayString: newDate
     });
+    await setGameDate(newDate);
   }
 
   toggle = () => {
@@ -83,25 +84,27 @@ class DashboardNav extends Component {
       <div>
         <Navbar color="dark" dark expand="sm" className="mb-5">
           <Container>
-            <NavbarBrand href="/">NavBarName</NavbarBrand>
-            <NavItem>
+            <NavbarBrand href="/">NBA Box Scores</NavbarBrand>
+            <NavItem style={{ listStyle: "none" }}>
               <ButtonDropdown
                 isOpen={this.state.selectOpen}
                 toggle={this.toggleSelect}
               >
-                <DropdownToggle caret>Select Date</DropdownToggle>
+                <DropdownToggle caret>
+                  {this.state.selectedDay === null
+                    ? "Select Date"
+                    : this.state.dayString}{" "}
+                </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem>
-                    <DayPicker
-                      selectedDays={this.state.selectedDay}
-                      onDayClick={this.handleDayClick}
-                    />
-                    <p>
-                      {this.state.selectedDay
-                        ? this.state.selectedDay.toLocaleDateString()
-                        : "Please select a day 👻"}
-                    </p>
-                  </DropdownItem>
+                  <DayPicker
+                    selectedDays={this.state.selectedDay}
+                    onDayClick={this.handleDayClick}
+                  />
+                  <p style={{ textAlign: "center" }}>
+                    {this.state.selectedDay
+                      ? this.state.selectedDay.toLocaleDateString()
+                      : "Please select a day 👻"}
+                  </p>
                 </DropdownMenu>
               </ButtonDropdown>
             </NavItem>
@@ -120,6 +123,8 @@ class DashboardNav extends Component {
   }
 }
 
-// export default connect(mapStateToProps, null)(DashboardNav);
+const mapStateToProps = state => ({
+  gameDate: state.game.gameDate
+});
 
-export default DashboardNav;
+export default connect(mapStateToProps, { setGameDate })(DashboardNav);

@@ -10,7 +10,7 @@ const saveNewGame = require("../components/saveNewGame");
 const saveNewBoxScore = require("../components/saveNewBoxScore");
 
 //@route GET /gamestats/fetch
-router.get("/fetchToday", async (req, res) => {
+router.get("/fetchDay", async (req, res) => {
   console.log(req.query.gamedate);
   const url = `https://stats.nba.com/stats/scoreboardV2?DayOffset=0&LeagueID=00&gameDate=${req.query.gamedate}`;
   const config = {
@@ -83,7 +83,9 @@ router.get("/game", (req, res) => {
             game_id: boxScoreSummary.game_id,
             gameDate: boxScoreSummary.gameDate,
             awayTeam: boxScoreSummary.awayTeam,
+            awayTeamAbr: boxScoreSummary.awayTeamAbr,
             homeTeam: boxScoreSummary.homeTeam,
+            homeTeamAbr: boxScoreSummary.homeTeamAbr,
             lastMeetingWinner: boxScoreSummary.lastMeetingWinner,
             q1AwayPts: boxScoreSummary.q1AwayPts,
             q2AwayPts: boxScoreSummary.q2AwayPts,
@@ -135,7 +137,9 @@ router.get("boxScore", async (req, res) => {
                       game_id: boxScoreSummary.game_id,
                       gameDate: boxScoreSummary.gameDate,
                       awayTeam: boxScoreSummary.awayTeam,
+                      awayTeamAbr: boxScoreSummary.awayTeamAbr,
                       homeTeam: boxScoreSummary.homeTeam,
+                      homeTeamAbr: boxScoreSummary.homeTeamAbr,
                       lastMeetingWinner: boxScoreSummary.lastMeetingWinner,
                       q1AwayPts: boxScoreSummary.q1AwayPts,
                       q2AwayPts: boxScoreSummary.q2AwayPts,
@@ -168,6 +172,83 @@ router.get("boxScore", async (req, res) => {
     })
     .catch(err => {
       console.log(err);
+      res.status(400).json({ err });
+    });
+});
+
+//@route GET /gamestats/gameOfDay
+//@desc get all games from a single date
+//@access public
+router.get("/gamesOfDate", (req, res) => {
+  if (!req.query.gamedate) {
+    res.status(400).json({ msg: "Invalid Date" });
+  }
+
+  let boxScoreSummary = [];
+
+  BoxScore.findAll({
+    where: {
+      gameDate: { [Op.startsWith]: req.query.gamedate }
+    }
+  })
+    .then(games => {
+      if (games[0] === undefined) {
+        res.status(204).json({ msg: "No games found for given date" });
+      } else {
+        games.forEach(game => {
+          const {
+            game_id,
+            gameDate,
+            awayTeam,
+            awayTeamAbr,
+            homeTeam,
+            homeTeamAbr,
+            lastMeetingWinner,
+            q1AwayPts,
+            q2AwayPts,
+            q3AwayPts,
+            q4AwayPts,
+            q1HomePts,
+            q2HomePts,
+            q3HomePts,
+            q4HomePts,
+            referee1,
+            referee2,
+            referee3,
+            timesTied,
+            leadChanges,
+            winner
+          } = game;
+          boxScoreSummary.push({
+            boxScore: {
+              game_id,
+              gameDate,
+              awayTeam,
+              awayTeamAbr,
+              homeTeam,
+              homeTeamAbr,
+              lastMeetingWinner,
+              q1AwayPts,
+              q2AwayPts,
+              q3AwayPts,
+              q4AwayPts,
+              q1HomePts,
+              q2HomePts,
+              q3HomePts,
+              q4HomePts,
+              referee1,
+              referee2,
+              referee3,
+              timesTied,
+              leadChanges,
+              winner
+            }
+          });
+        });
+        res.status(200).json({ boxScoreSummary });
+      }
+    })
+    .catch(err => {
       res.status(400).json({ err });
     });
 });
