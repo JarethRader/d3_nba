@@ -16,7 +16,7 @@ import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 
 import { connect } from "react-redux";
-import { setGameDate } from "../actions/gameAction";
+import { setGameDate, getGamesOfDay } from "../actions/gameAction";
 
 class DashboardNav extends Component {
   constructor(props) {
@@ -60,6 +60,7 @@ class DashboardNav extends Component {
       month = "0" + month;
     }
 
+    let formatedDate = day.getFullYear() + "-" + month + "-" + dt;
     year = year.substring(1, 3);
     let newDate = month + "/" + dt + "/" + year;
     console.log(newDate);
@@ -68,7 +69,9 @@ class DashboardNav extends Component {
       selectedDay: selected ? undefined : day,
       dayString: newDate
     });
-    await setGameDate(newDate);
+    await this.props.setGameDate(newDate);
+    console.log(formatedDate);
+    await this.props.getGamesOfDay(formatedDate);
   }
 
   toggle = () => {
@@ -127,4 +130,6 @@ const mapStateToProps = state => ({
   gameDate: state.game.gameDate
 });
 
-export default connect(mapStateToProps, { setGameDate })(DashboardNav);
+export default connect(mapStateToProps, { setGameDate, getGamesOfDay })(
+  DashboardNav
+);

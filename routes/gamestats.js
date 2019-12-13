@@ -18,6 +18,7 @@ router.get("/fetchDay", async (req, res) => {
       "Content-Type": "application/json"
     }
   };
+  let returnGames = [];
 
   axios
     .get(url, config)
@@ -35,6 +36,7 @@ router.get("/fetchDay", async (req, res) => {
               await saveNewBoxScore(game.game_id)
                 .then(boxScore => {
                   console.log(boxScore);
+                  returnGames = [boxScore, ...returnGames];
                   // res.status(200).json(boxScore);
                 })
                 .catch(err => {
@@ -47,6 +49,7 @@ router.get("/fetchDay", async (req, res) => {
                 await saveNewGame(_game_id)
                   .then(boxscore => {
                     console.log(boxscore);
+                    returnGames = [boxscore, ...returnGames];
                   })
                   .catch(err => {
                     console.log(err);
@@ -60,7 +63,7 @@ router.get("/fetchDay", async (req, res) => {
           res.status(400).json({ err });
         }
       }
-      res.status(200).json({ success: true });
+      res.status(200).json(returnGames);
     })
     .catch(err => {
       console.log(err);

@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 
 import DashboardNav from "./components/dashboardNav";
+import DataDisplay from "./components/dataDisplay";
 
 class App extends Component {
   // constructor(props){
@@ -22,6 +23,7 @@ class App extends Component {
         <div className="App">
           <Container>
             <DashboardNav />
+            <DataDisplay />
           </Container>
         </div>
       </Provider>

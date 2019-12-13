@@ -12,20 +12,38 @@ import axios from "axios";
 
 export const getGamesOfDay = gamedate => dispatch => {
   dispatch(setGamestatsLoading());
-
-  if (!gamedate.test(/\d{4}-\d{2}-\d{2}/)) {
-    throw Error("invalid Date Format");
+  let gameList = [];
+  if (!/\d{4}-\d{2}-\d{2}/.test(gamedate)) {
+    throw Error("Invalid Date Format");
   } else {
     axios
       .get(`/gamestats/gamesOfDate?gamedate=${gamedate}`)
       .then(res => {
         if (res.status === 200) {
+          res.data.boxScoreSummary.forEach(game => {
+            let gameInfo = {
+              game_id: game.boxScore.game_id,
+              awayTeam: game.boxScore.awayTeam,
+              awayTeamAbr: game.boxScore.awayTeamAbr,
+              homeTeam: game.boxScore.homeTeam,
+              homeTeamAbr: game.boxScore.homeTeamAbr
+            };
+            gameList = [gameInfo, ...gameList];
+          });
           dispatch({
             type: GET_GAME_OF_DATE_SUCCESS,
-            payload: res.data
+            payload: { gamesOfDate: res.data, gameList: gameList }
           });
         } else if (res.status === 204) {
-          dispatch(getDate());
+          dispatch(
+            getDate(
+              gamedate.substring(5, 7) +
+                "/" +
+                gamedate.substring(8, 10) +
+                "/" +
+                gamedate.substring(2, 4)
+            )
+          );
         }
       })
       .catch(err => {
@@ -39,16 +57,29 @@ export const getGamesOfDay = gamedate => dispatch => {
 
 export const getDate = gameDate => dispatch => {
   dispatch(setGamestatsLoading());
-
-  if (!gameDate.test(/\d{2}[/]\d{2}[/]\d{2}/)) {
+  let gameList = [];
+  console.log("Game Date: " + gameDate);
+  if (!/\d{2}[/]\d{2}[/]\d{2}/.test(gameDate)) {
     throw Error("Invalid Date Format");
   } else {
     axios
-      .get(`/gamestats/fetchDay?gameDate=${gameDate}`)
+      .get(`/gamestats/fetchDay?gamedate=${gameDate}`)
       .then(res => {
+        //TODO Add Gameslist here
+
+        res.data.forEach(game => {
+          let gameInfo = {
+            game_id: game.boxScore.game_id,
+            awayTeam: game.boxScore.awayTeam,
+            awayTeamAbr: game.boxScore.awayTeamAbr,
+            homeTeam: game.boxScore.homeTeam,
+            homeTeamAbr: game.boxScore.homeTeamAbr
+          };
+          gameList = [gameInfo, ...gameList];
+        });
         dispatch({
           type: LOAD_NEW_DATE_SUCCESS,
-          payload: res.data
+          payload: { gamesOfDate: res.data, gameList: gameList }
         });
       })
       .catch(err => {
@@ -62,8 +93,8 @@ export const getDate = gameDate => dispatch => {
 
 export const getGame = gameID => dispatch => {
   dispatch(setGamestatsLoading());
-
-  if (!gameID.test(/\d{8}/)) {
+  console.log(gameID);
+  if (!/\d{8}/.test(gameID)) {
     throw Error("Invalid Game ID");
   } else {
     axios

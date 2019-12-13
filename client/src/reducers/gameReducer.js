@@ -13,6 +13,7 @@ const intitialState = {
   gameDate: null,
   game: {},
   gamesOfDate: [],
+  gameList: [],
   gamestatsLoading: false
 };
 
@@ -27,6 +28,7 @@ export default function(state = intitialState, action) {
       };
     case GET_GAME_SUCCESS:
       return {
+        ...state,
         game: action.payload,
         gamestatsLoading: false
       };
@@ -37,19 +39,18 @@ export default function(state = intitialState, action) {
         gamestatsLoading: false
       };
     case GET_GAME_OF_DATE_SUCCESS:
-      return {
-        gamesOfDate: action.payload,
-        gamestatsLoading: false
-      };
-    case GET_GAME_OF_DATE_FAIL:
-      return {
-        gamesOfDate: [],
-        gamestatsLoading: false
-      };
-    case LOAD_NEW_DATE_FAIL:
     case LOAD_NEW_DATE_SUCCESS:
       return {
         ...state,
+        gamesOfDate: action.payload.gamesOfDate,
+        gameList: action.payload.gameList,
+        gamestatsLoading: false
+      };
+    case GET_GAME_OF_DATE_FAIL:
+    case LOAD_NEW_DATE_FAIL:
+      return {
+        ...state,
+        gamesOfDate: [],
         gamestatsLoading: false
       };
     case GAMESTATS_LOADING:
