@@ -1,78 +1,159 @@
 import React, { Component } from "react";
-import { Element } from "react-faux-dom";
-import * as d3 from "d3";
+import { connect } from "react-redux";
+import "./graph.css";
 
 export class GamePointsBarGraph extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    allPts: []
+  };
+
+  renderLines() {
+    const { boxScoreSummary } = this.props.game;
+
+    let awayTtlPts =
+      boxScoreSummary.q1AwayPts +
+      boxScoreSummary.q2AwayPts +
+      boxScoreSummary.q3AwayPts +
+      boxScoreSummary.q4AwayPts;
+
+    let homeTtlPts =
+      boxScoreSummary.q1HomePts +
+      boxScoreSummary.q2HomePts +
+      boxScoreSummary.q3HomePts +
+      boxScoreSummary.q4HomePts;
+
+    let highPts = Math.ceil(Math.max(awayTtlPts, homeTtlPts) / 10);
+
+    return Array(highPts)
+      .fill(null)
+      .map((el, i) => <Line left={(100 / highPts) * i + 8.5} key={i} />);
   }
 
-  plot(chart, width, height) {
-    try {
-      const bs = this.props.game.boxScoreSummary;
+  renderBars() {
+    const { boxScoreSummary } = this.props.game;
 
-      const data = [
-        {
-          team: bs.awayTeamAbr,
-          Q1: bs.q1AwayPts,
-          Q2: bs.q2AwayPts,
-          Q3: bs.q3AwayPts,
-          Q4: bs.q4AwayPts
-        },
-        {
-          team: bs.homeTeamAbr,
-          Q1: bs.q1HomePts,
-          Q2: bs.q2HomePts,
-          Q3: bs.q3HomePts,
-          Q4: bs.q4HomePts
-        }
-      ];
+    let awayTtlPts =
+      boxScoreSummary.q1AwayPts +
+      boxScoreSummary.q2AwayPts +
+      boxScoreSummary.q3AwayPts +
+      boxScoreSummary.q4AwayPts;
 
-      const xData = ["Q1", "Q2", "Q3", "Q4"];
+    let homeTtlPts =
+      boxScoreSummary.q1HomePts +
+      boxScoreSummary.q2HomePts +
+      boxScoreSummary.q3HomePts +
+      boxScoreSummary.q4HomePts;
 
-      const awayTtlPts =
-        bs.q1AwayPts + bs.q2AwayPts + bs.q3AwayPts + bs.q4AwayPts;
-      const homeTtlPts =
-        bs.q1homePts + bs.q2homePts + bs.q3homePts + bs.q4homePts;
-    } catch (err) {
-      console.log(err);
-    }
-  }
+    let highPts = Math.ceil(Math.max(awayTtlPts, homeTtlPts) / 10);
 
-  drawChart() {
-    const width = 800;
-    const height = 450;
+    let allPts = [
+      {
+        team: boxScoreSummary.awayTeamAbr,
+        ttlPts: awayTtlPts
+      },
+      {
+        team: boxScoreSummary.homeTeamAbr,
+        ttlPts: homeTtlPts
+      }
+    ];
 
-    const el = new Element("div");
-    const svg = d3
-      .select(el)
-      .append("svg")
-      .attr("id", "chart")
-      .attr("width", width)
-      .attr("height", height);
-
-    const margin = {
-      top: 60,
-      bottom: 100,
-      left: 80,
-      right: 40
-    };
-
-    const chart = svg
-      .append("g")
-      .classed("display", true)
-      .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    const chartWidth = width - margin.left - margin.right;
-    const chartHeight = height - margin.top - margin.bottom;
-    this.plot(chart, chartWidth, chartHeight);
-
-    return el.toReact();
+    return allPts.map(pts => {
+      const percent = (pts.ttlPts / highPts) * 10;
+      return <Bar percent={percent} key={pts.team} />;
+    });
   }
 
   render() {
-    return this.drawChart();
+    const { boxScoreSummary } = this.props.game;
+
+    let awayTtlPts =
+      boxScoreSummary.q1AwayPts +
+      boxScoreSummary.q2AwayPts +
+      boxScoreSummary.q3AwayPts +
+      boxScoreSummary.q4AwayPts;
+
+    let homeTtlPts =
+      boxScoreSummary.q1HomePts +
+      boxScoreSummary.q2HomePts +
+      boxScoreSummary.q3HomePts +
+      boxScoreSummary.q4HomePts;
+
+    let allPts = [
+      {
+        team: boxScoreSummary.awayTeamAbr,
+        ttlPts: awayTtlPts
+      },
+      {
+        team: boxScoreSummary.homeTeamAbr,
+        ttlPts: homeTtlPts
+      }
+    ];
+
+    let highPts = Math.ceil(Math.max(awayTtlPts, homeTtlPts) / 10);
+
+    return (
+      <div className="graph-wrapper">
+        <h2>
+          {this.props.game.boxScoreSummary.awayTeam +
+            " vs. " +
+            this.props.game.boxScoreSummary.homeTeam}
+        </h2>
+        <h3>Total Points Scored</h3>
+
+        <div className="graph">
+          <BarTextContent pts={allPts} />
+
+          <div className="bar-lines-container">
+            {this.renderLines()}
+            {this.renderBars()}
+          </div>
+
+          <div style={{ width: "12%" }} />
+          <Markers pts={highPts + 1} />
+        </div>
+      </div>
+    );
   }
 }
 
-export default GamePointsBarGraph;
+const Markers = pts => {
+  console.log(pts.pts);
+  const markerArr = Array(pts.pts).fill(null);
+  return (
+    <div className="markers">
+      {markerArr.map((el, i) => (
+        <span
+          className="marker"
+          style={{ left: `${(100 / pts.pts) * i + 5}%` }}
+        >
+          {i * pts.pts}
+        </span>
+      ))}
+    </div>
+  );
+};
+
+const Bar = ({ percent }) => {
+  return <div className="bar" style={{ width: `${percent}%` }} />;
+};
+
+const BarTextContent = ({ pts }) => {
+  return (
+    <div className="bar-text-content">
+      {pts.map(pts => (
+        <div className="text">{pts.team}</div>
+      ))}
+    </div>
+  );
+};
+
+const Line = ({ left }) => {
+  return <div className="line" style={{ left: `${left}%` }} />;
+};
+
+const mapStateToProps = state => ({
+  loading: state.gameStatsLoading,
+  game: state.game.game
+});
+
+export default connect(mapStateToProps, null)(GamePointsBarGraph);

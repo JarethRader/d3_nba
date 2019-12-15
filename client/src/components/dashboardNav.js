@@ -92,6 +92,7 @@ class DashboardNav extends Component {
               <ButtonDropdown
                 isOpen={this.state.selectOpen}
                 toggle={this.toggleSelect}
+                style={{ zIndex: "40" }}
               >
                 <DropdownToggle caret>
                   {this.state.selectedDay === null

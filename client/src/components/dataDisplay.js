@@ -35,11 +35,17 @@ export class DataDisplay extends Component {
   render() {
     return (
       <div>
-        <Container>
+        <Container style={{ marginTop: "100px" }}>
           <Row>
-            <Col lg="12">
+            <Col lg="3">
               <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                <DropdownToggle caret>Select Game</DropdownToggle>
+                <DropdownToggle caret>
+                  {!this.props.game.boxScoreSummary
+                    ? "Select Game"
+                    : this.props.game.boxScoreSummary.awayTeamAbr +
+                      " vs. " +
+                      this.props.game.boxScoreSummary.homeTeamAbr}
+                </DropdownToggle>
                 <DropdownMenu>
                   {this.props.gameList.map(game => {
                     return (
@@ -55,10 +61,9 @@ export class DataDisplay extends Component {
             </Col>
           </Row>
           <Row>
-            <Col lg="12">
-              {this.props.game ? (
-                <GamePointsBarGraph game={this.props.game} />
-              ) : null}
+            <Col lg="3"></Col>
+            <Col lg="9">
+              {!this.props.game.boxScoreSummary ? null : <GamePointsBarGraph />}
             </Col>
           </Row>
         </Container>
